@@ -1,73 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>品牌管理</title>
     <link rel="stylesheet" href="../css/elementui(1).css">
 
 </head>
+
 <body>
-<div id="app">
+    <div id="app">
 
-    <el-form :inline="true" >
-        <el-form-item label="品牌名称">
-            <el-input placeholder="请输入品牌名称" v-model="searchMap.name"></el-input>
-        </el-form-item>
-        <el-form-item label="品牌首字母">
-            <el-input  placeholder="请输入品牌首字母" v-model="searchMap.letter"></el-input>
-        </el-form-item>
+        <el-form :inline="true">
+            <el-form-item label="品牌名称">
+                <el-input placeholder="请输入品牌名称" v-model="searchMap.name"></el-input>
+            </el-form-item>
+            <el-form-item label="品牌首字母">
+                <el-input placeholder="请输入品牌首字母" v-model="searchMap.letter"></el-input>
+            </el-form-item>
 
-        <el-button @click="fatchData" type="primary">查询</el-button>
-    </el-form>
+            <el-button @click="fatchData" type="primary">查询</el-button>
+            <el-button @click="pojo={},formVisible = true" type="primary">新增</el-button>
+        </el-form>
 
-    <el-table
-            :data="tableData"
-            border
-            style="width: 100%">
-        <el-table-column
-                prop="id"
-                label="ID"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="name"
-                label="品牌名称"
-        >
-        </el-table-column>
-        <el-table-column
-                prop="letter"
-                label="品牌首字母"
-                width="180">
-        </el-table-column>
-        <el-table-column
-                prop="image"
-                label="图片"
-                width="180">
-            <template slot-scope="scope">
-                <img :src="scope.row.image"/>
+        <el-table :data="tableData" border style="width: 100%">
+            <el-table-column prop="id" label="ID" width="180">
+            </el-table-column>
+            <el-table-column prop="name" label="品牌名称">
+            </el-table-column>
+            <el-table-column prop="letter" label="品牌首字母" width="180">
+            </el-table-column>
+            <el-table-column prop="image" label="图片" width="180">
+                <template slot-scope="scope">
+                    <img :src="scope.row.image" />
 
-            </template>
+                </template>
 
-        </el-table-column>
-        <el-table-column
-                prop="seq"
-                label="seq"
-                width="180">
-        </el-table-column>
+            </el-table-column>
+            <el-table-column prop="seq" label="排序" width="180">
+            </el-table-column>
 
-    </el-table>
+            <el-table-column label="操作" width="180">
+                <template slot-scope="scope">
+                    <el-button size="small" @click="edit(scope.row.id)" type="text">修改</el-button>
+                </template>
 
-    <el-pagination
-            @size-change="fatchData"
-            @current-change="fatchData"
-            :current-page.sync="currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
+            </el-table-column>
+        </el-table>
+
+
+        <el-pagination @size-change="fatchData" @current-change="fatchData" :current-page.sync="currentPage"
+            :page-sizes="[10, 20, 30, 40]" :page-size="100" layout="total, sizes, prev, pager, next, jumper"
             :total="total">
-    </el-pagination>
+        </el-pagination>
 
-</div>
+        <el-dialog title="品牌编辑" :visible.sync="formVisible">
+            <el-form label-width="85px">
+                <el-form-item label="品牌名称">
+                    <el-input placeholder="请输入品牌名称" v-model="pojo.name"></el-input>
+                </el-form-item>
+                <el-form-item label="品牌首字母">
+                    <el-input placeholder="请输入品牌首字母" v-model="pojo.letter"></el-input>
+                </el-form-item>
+                <el-form-item label="品牌图片">
+                    <el-input placeholder="请输入品牌图片" v-model="pojo.image"></el-input>
+                </el-form-item>
+                <el-form-item label="品牌排序">
+                    <el-input placeholder="品牌排序" v-model="pojo.seq"></el-input>
+                </el-form-item>
+
+                <el-button @click="save()">保存</el-button>
+                <el-button @click="formVisible = false">关闭</el-button>
+            </el-form>
+        </el-dialog>
+
+    </div>
 
 </body>
 <script src="../js/vue(1).js"></script>
@@ -80,13 +87,20 @@
         el: "#app",
         data() {
             return {
+                formVisible: false,
+                pojo: {
+                    name: "",
+                    letter: "",
+                    image: "",
+                    seq: ""
+                },
                 tableData: [],
                 currentPage: 1,
                 size: 10,
                 total: 0,
-                searchMap:{
-                    "name":"",
-                    "letter":""
+                searchMap: {
+                    "name": "",
+                    "letter": ""
                 }
             }
         },
@@ -104,12 +118,32 @@
         },
         methods: {
             fatchData() {
-                axios.post(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`,this.searchMap).then(response => {
+                axios.post(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`, this.searchMap).then(response => {
                     this.tableData = response.data.result;
                     this.total = response.data.total;
-                    // alert(this.tableData)
+                    // alert(this.total)
                 })
 
+            },
+            save() {
+                axios.post(`/brand/${this.pojo.id == null ? 'add' : 'update'}.do`, this.pojo).then(response => {
+                    this.formVisible = false;
+                    this.fatchData();
+                })
+            },
+            edit(id) {
+                axios.get(`/brand/findById.do?id=${id}`).then(response => {
+                    this.pojo = response.data;
+                    this.formVisible = true;//打开窗口
+                })
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
             }
         }
     })

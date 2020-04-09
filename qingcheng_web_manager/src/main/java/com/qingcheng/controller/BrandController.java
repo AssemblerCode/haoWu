@@ -18,59 +18,62 @@ public class BrandController {
     private BrandService brandService;
 
     @RequestMapping("/findAll")
-    public List<Brand> findAll(){
+    public List<Brand> findAll() {
         return brandService.findAll();
     }
 
     @GetMapping("/pageFindAll")
-    public PageResult<Brand> pageFindAll(Integer page,Integer size){
+    public PageResult<Brand> pageFindAll(Integer page, Integer size) {
         System.out.println("page = " + page + ", size = " + size);
-        if(page == null || page < 1){
-            page=1;
+        if (page == null || page < 1) {
+            page = 1;
         }
-        if(size == null || size < 1){
-            size=10;
+        if (size == null || size < 1) {
+            size = 10;
         }
-        return brandService.findPage(page,size);
+        return brandService.findPage(page, size);
     }
 
     @PostMapping("/findList")
-    public List<Brand> findList(@RequestBody Map<String,String> map){
+    public List<Brand> findList(@RequestBody Map<String, String> map) {
         List<Brand> list = brandService.findList(map);
         return list;
     }
 
     @PostMapping("/findPage")
-    public PageResult<Brand> findPage(Integer page,Integer size,@RequestBody Map<String, String> searchMap){
-        System.out.println("page = " + page + ", size = " + size + ", searchMap = " + searchMap.get("name")+","+searchMap.get("letter"));
-        if(page == null || page < 1){
-            page=1;
+    public PageResult<Brand> findPage(Integer page, Integer size, @RequestBody Map<String, String> searchMap) {
+        System.out.println("page = " + page + ", size = " + size + ", searchMap = " + searchMap.get("name") + "," + searchMap.get("letter"));
+        if (page == null || page < 1) {
+            page = 1;
         }
-        if(size == null || size < 1){
-            size=10;
+        if (size == null || size < 1) {
+            size = 10;
         }
-        return brandService.findPage(page,size,searchMap);
+        PageResult<Brand> result = brandService.findPage(page, size, searchMap);
+        System.out.println("result" + result);
+        return result;
     }
 
     @GetMapping("/findById")
-    public Brand findById(String id){
+    public Brand findById(String id) {
         return brandService.findById(id);
     }
 
     @PostMapping("/add")
-    public ResultInfo add(@RequestBody Brand brand){
+    public ResultInfo add(@RequestBody Brand brand) {
+        System.out.println("brand = " + brand);
         brandService.add(brand);
         return new ResultInfo();
     }
 
     @PostMapping("/update")
-    public ResultInfo update(@RequestBody Brand brand){
+    public ResultInfo update(@RequestBody Brand brand) {
         brandService.update(brand);
         return new ResultInfo();
     }
 
     @GetMapping("/del")
-    public ResultInfo del(String id){
+    public ResultInfo del(String id) {
         brandService.del(id);
         return new ResultInfo();
     }

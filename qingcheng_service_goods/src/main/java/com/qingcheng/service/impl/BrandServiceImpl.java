@@ -27,23 +27,23 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public PageResult<Brand> findPage(int page, int size) {
 
-        PageHelper.startPage(page,size);
+        PageHelper.startPage(page, size);
 //        Page<Brand> pageResult=(Page<Brand>)brandMapper.selectAll();
-        Page<Brand> pageResult=(Page<Brand>)findAll();
-        return new PageResult<Brand>(pageResult.getTotal(),pageResult.getResult());
+        Page<Brand> pageResult = (Page<Brand>) findAll();
+        return new PageResult<Brand>(pageResult.getTotal(), pageResult.getResult());
     }
 
     @Override
     public List<Brand> findList(Map<String, String> searchMap) {
-        Example example=new Example(Brand.class);
+        Example example = new Example(Brand.class);
         Example.Criteria criteria = example.createCriteria();
 
-        if(!searchMap.isEmpty()||searchMap!=null){
-            if(searchMap.get("name")!=null&&!"".equalsIgnoreCase(searchMap.get("name"))){
-                criteria.andLike("name","%"+searchMap.get("name")+"%");
+        if (!searchMap.isEmpty() || searchMap != null) {
+            if (searchMap.get("name") != null && !"".equalsIgnoreCase(searchMap.get("name"))) {
+                criteria.andLike("name", "%" + searchMap.get("name") + "%");
             }
-            if(searchMap.get("letter")!=null&&!"".equalsIgnoreCase(searchMap.get("letter"))){
-                criteria.andEqualTo("letter",searchMap.get("letter"));
+            if (searchMap.get("letter") != null && !"".equalsIgnoreCase(searchMap.get("letter"))) {
+                criteria.andEqualTo("letter", searchMap.get("letter"));
             }
         }
 
@@ -51,18 +51,18 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public PageResult<Brand> findPage(int page,int size,Map<String, String> searchMap) {
+    public PageResult<Brand> findPage(int page, int size, Map<String, String> searchMap) {
+        PageHelper.startPage(page, size);
         List<Brand> list = findList(searchMap);
-        PageHelper.startPage(page,size);
-        Page<Brand> pageResult=new Page();
-        pageResult.addAll(list);
-        return new PageResult<Brand>(pageResult.getTotal(),pageResult.getResult());
+        Page<Brand> pageResult=(Page<Brand>) list;
+        return new PageResult<>(pageResult.getTotal(),pageResult.getResult());
+
     }
 
     @Override
     public Brand findById(String id) {
-        Brand brand=new Brand();
-        if(!StringUtil.isNotEmpty(id)){
+        Brand brand = new Brand();
+        if (!StringUtil.isNotEmpty(id)) {
             return null;
         }
         brand.setId(Integer.valueOf(id));
