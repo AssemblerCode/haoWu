@@ -105,25 +105,14 @@
             }
         },
         created() {
-
-            // axios.get('/brand/findAll.do').then(response => {
-            //     this.tableData = response.data;
-            //     for (var i = 0; i < this.tableData.length; i++) {
-            //         console.log(this.tableData[i].image);
-            //     }
-            // })
-
             this.fatchData();
-
         },
         methods: {
             fatchData() {
                 axios.post(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`, this.searchMap).then(response => {
                     this.tableData = response.data.result;
                     this.total = response.data.total;
-                    // alert(this.total)
                 })
-
             },
             save() {
                 axios.post(`/brand/${this.pojo.id == null ? 'add' : 'update'}.do`, this.pojo).then(response => {

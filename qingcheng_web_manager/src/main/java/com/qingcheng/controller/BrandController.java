@@ -62,7 +62,6 @@ public class BrandController {
     @PostMapping("/add")
     public ResultInfo add(@RequestBody Brand brand) {
         System.out.println("brand = " + brand);
-        brandService.add(brand);
         return new ResultInfo();
     }
 
