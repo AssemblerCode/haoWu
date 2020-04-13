@@ -1,11 +1,10 @@
-package com.qingcheng.controller;
+package com.qingcheng.controller.goods;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.entity.ResultInfo;
 import com.qingcheng.pojo.Brand;
 import com.qingcheng.service.BrandService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
