@@ -45,11 +45,6 @@
 		<constructor-arg index="2">
 			<value>${accessKeySecret}</value>
 		</constructor-arg>
-<!--		<constructor-arg index="1" value="${accessKeyId}"></constructor-arg>-->
-<!--		<constructor-arg index="2" value="${accessKeySecret}"></constructor-arg>-->
-<!--		<constructor-arg index="0" value="http://oss-cn-hangzhou.aliyuncs.com"></constructor-arg>-->
-<!--		<constructor-arg index="1" value="LTAI4Fs3Z8vZCjCthncQ9XUi"></constructor-arg>-->
-<!--		<constructor-arg index="2" value="rPJQqr1OofBaRIGBpbtFzq1uS6ngb3"></constructor-arg>-->
 	</bean>
 
 </beans>
