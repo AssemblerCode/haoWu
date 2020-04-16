@@ -1,6 +1,9 @@
 package com.qingcheng.controller.file;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.aliyun.oss.OSSClient;
+import com.qingcheng.pojo.goods.Brand;
+import com.qingcheng.service.goods.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +23,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/upload")
 public class UploadFileController {
+    @Reference
+    private BrandService brandService;
+
     @Autowired
     private OSSClient client;
 
@@ -62,4 +68,5 @@ public class UploadFileController {
             return result;
         }
     }
+
 }

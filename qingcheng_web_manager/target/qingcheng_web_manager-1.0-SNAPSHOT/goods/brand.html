@@ -6,6 +6,34 @@
     <title>品牌管理</title>
     <link rel="stylesheet" href="../css/elementui(1).css">
 
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -64,7 +92,14 @@
                 <el-input placeholder="请输入品牌首字母" v-model="pojo.letter"></el-input>
             </el-form-item>
             <el-form-item label="品牌图片">
-                <el-input placeholder="请输入品牌图片" v-model="pojo.image"></el-input>
+                <!-- <el-input placeholder="请输入品牌图片" v-model="pojo.image"></el-input> -->
+
+                <el-upload class="avatar-uploader" action="/upload/oss.do" :show-file-list="false"
+                           :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
             </el-form-item>
             <el-form-item label="品牌排序">
                 <el-input placeholder="品牌排序" v-model="pojo.seq"></el-input>
@@ -88,6 +123,7 @@
         el: "#app",
         data() {
             return {
+                imageUrl: "",
                 formVisible: false,
                 pojo: {
                     name: "",
@@ -111,20 +147,22 @@
         methods: {
             fatchData() {
                 axios.post(`/brand/findPage.do?page=${this.currentPage}&size=${this.size}`, this.searchMap).then(response => {
-                    this.tableData = response.data.result;
+                    this.tableData = response.data.rows;
+                    alert(this.tableData);
                     this.total = response.data.total;
+                    this.imageUrl = response.data.image;
                 })
             },
             save() {
                 var url = "/brand/"
                 this.pojo.id == null ? url += "add.do" : url += "update.do";
-                alert(url);
+                this.pojo.image = this.imageUrl;
                 axios.post(url, this.pojo).then(response => {
-                    alert(123)
                     this.formVisible = false;
                     this.fatchData();
                 })
                 this.pojo = {};
+                this.imageUrl = "";
             },
             edit(id) {
                 axios.get(`/brand/findById.do?id=${id}`).then(response => {
@@ -140,6 +178,7 @@
                     type: 'warning'
                 }).then(() => {
                     axios.get(`/brand/del.do?id=${id}`).then(response => {
+                        this.$alert("删除成功!!!", "提示");
                         this.fatchData();
                     })
                     this.$message({
@@ -160,6 +199,23 @@
                     })
                     .catch(_ => {
                     });
+            },
+            handleAvatarSuccess(res, file) {
+                // this.imageUrl = URL.createObjectURL(file.raw);
+                this.imageUrl = file.response;
+
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
             }
         }
     })

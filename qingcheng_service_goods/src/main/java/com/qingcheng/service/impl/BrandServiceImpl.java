@@ -6,8 +6,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.StringUtil;
 import com.qingcheng.dao.BrandMapper;
 import com.qingcheng.entity.PageResult;
-import com.qingcheng.pojo.Brand;
-import com.qingcheng.service.BrandService;
+import com.qingcheng.pojo.goods.Brand;
+import com.qingcheng.service.goods.BrandService;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
@@ -54,8 +54,9 @@ public class BrandServiceImpl implements BrandService {
     public PageResult<Brand> findPage(int page, int size, Map<String, String> searchMap) {
         PageHelper.startPage(page, size);
         List<Brand> list = findList(searchMap);
+        System.out.println("list=="+list.size());
         Page<Brand> pageResult=(Page<Brand>) list;
-        return new PageResult<>(pageResult.getTotal(),pageResult.getResult());
+        return new PageResult<Brand>(pageResult.getTotal(),pageResult.getResult());
 
     }
 
