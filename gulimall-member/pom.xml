@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.atguigu.gulimall</groupId>
     <artifactId>gulimall-member</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>gulimall-member</name>
@@ -23,6 +24,7 @@
 
 
     <dependencies>
+
         <dependency>
             <groupId>com.pxkj.gulimall</groupId>
             <artifactId>gulimall-common</artifactId>
